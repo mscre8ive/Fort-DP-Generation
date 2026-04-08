@@ -2,40 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fort Fest 2026 – DP Generator</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <main>
+    <section class="card">
+      <h1>Fort Fest 2026 DP Generator</h1>
+      <p>Upload your photo, drag to position, pinch or slide to zoom, then download.</p>
 
-<main>
-  <!-- Card Section: Controls -->
-  <section class="card">
-    <h1>Fort Fest 2026 DP Generator</h1>
-    <p>Upload your photo, adjust it, and download your custom event DP.</p>
+      <div class="upload">
+        <input type="file" id="photoInput" accept="image/*" />
+        <p>Click to upload your image</p>
+      </div>
 
-    <div class="upload">
-      <input type="file" id="photoInput" accept="image/*">
-      <p>Click or drag your image here</p>
-    </div>
+      <div class="controls" id="controls">
+        <label>Zoom: <span id="zoomVal">100%</span></label>
+        <input type="range" id="zoom" min="50" max="300" value="100" />
+      </div>
 
-    <div class="controls" id="controls">
-      <label>Zoom: <span id="zoomVal">100%</span></label>
-      <input type="range" id="zoom" min="50" max="250" value="100">
-    </div>
+      <button id="downloadBtn" disabled>Download DP</button>
+    </section>
 
-    <button id="downloadBtn" disabled>Download DP</button>
-  </section>
+    <section>
+      <div class="preview-wrap">
+        <canvas id="canvas"></canvas>
+        <div class="guide-circle"></div>
+      </div>
+    </section>
+  </main>
 
-  <!-- Preview Section: Canvas -->
-  <section class="preview-wrap">
-      <canvas id="canvas"></canvas>
-  </section>
-</main>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
