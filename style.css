@@ -24,6 +24,11 @@ main {
   gap: 40px;
 }
 
+background-image: url('Fort Fest Custom DP Portrait 4.png');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+
 @media(max-width:768px){
   main {
     grid-template-columns: 1fr;
