@@ -1,0 +1,87 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #fafafa;
+  color: #111;
+}
+
+:root {
+  --red: #C8102E;
+  --light: #f5d0d7;
+}
+
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+@media(max-width:768px){
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+.upload {
+  border: 2px dashed var(--light);
+  padding: 30px;
+  border-radius: 16px;
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.upload input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.preview-wrap {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+}
+
+canvas {
+  width: 100%;
+  display: block;
+  aspect-ratio: 4/5;
+}
+
+button {
+  padding: 14px 18px;
+  border: none;
+  border-radius: 14px;
+  background: var(--red);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.controls {
+  display: none;
+  margin-top: 16px;
+}
+
+#zoom {
+  width: 100%;
+}
