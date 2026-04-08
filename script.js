@@ -3,28 +3,26 @@ const ctx = canvas.getContext('2d');
 
 const OUT_W = 1000;
 const OUT_H = 1250;
-
 canvas.width = OUT_W;
 canvas.height = OUT_H;
 
 const template = new Image();
-template.src = 'Fort_Fest_Custom_DP_Portrait_4.png';
+template.src = 'fort.jpeg';
 
 let userImg = null;
 let zoom = 1;
 let offsetX = 0;
 let offsetY = 0;
-
 let isDragging = false;
 let lastX = 0;
 let lastY = 0;
-
 let pinchStartDistance = 0;
 let pinchStartZoom = 1;
 
 const circle = { x: 500, y: 335, r: 215 };
 
 template.onload = draw;
+draw();
 
 function draw() {
   ctx.clearRect(0, 0, OUT_W, OUT_H);
@@ -38,7 +36,9 @@ function draw() {
     const size = circle.r * 2 * zoom;
     const ratio = userImg.width / userImg.height;
 
-    let w = size, h = size;
+    let w = size;
+    let h = size;
+
     if (ratio > 1) w = size * ratio;
     else h = size / ratio;
 
@@ -62,13 +62,12 @@ function getDistance(t1, t2) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-// Upload
-document.getElementById('photoInput').addEventListener('change', e => {
+document.getElementById('photoInput').addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = ev => {
+  reader.onload = (ev) => {
     const img = new Image();
     img.onload = () => {
       userImg = img;
@@ -78,7 +77,6 @@ document.getElementById('photoInput').addEventListener('change', e => {
 
       document.getElementById('controls').style.display = 'block';
       document.getElementById('downloadBtn').disabled = false;
-
       draw();
     };
     img.src = ev.target.result;
@@ -86,23 +84,23 @@ document.getElementById('photoInput').addEventListener('change', e => {
   reader.readAsDataURL(file);
 });
 
-// Slider zoom
-document.getElementById('zoom').addEventListener('input', e => {
+document.getElementById('zoom').addEventListener('input', (e) => {
   zoom = e.target.value / 100;
-  document.getElementById('zoomVal').textContent = e.target.value + '%';
+  document.getElementById('zoomVal').textContent = `${e.target.value}%`;
   draw();
 });
 
-// Mouse drag
-canvas.addEventListener('mousedown', e => {
+canvas.addEventListener('mousedown', (e) => {
   isDragging = true;
   lastX = e.offsetX;
   lastY = e.offsetY;
 });
 
-window.addEventListener('mouseup', () => isDragging = false);
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+});
 
-canvas.addEventListener('mousemove', e => {
+canvas.addEventListener('mousemove', (e) => {
   if (!isDragging || !userImg) return;
 
   const scaleX = OUT_W / canvas.clientWidth;
@@ -117,8 +115,7 @@ canvas.addEventListener('mousemove', e => {
   draw();
 });
 
-// Touch drag + pinch zoom
-canvas.addEventListener('touchstart', e => {
+canvas.addEventListener('touchstart', (e) => {
   if (!userImg) return;
 
   if (e.touches.length === 1) {
@@ -131,7 +128,7 @@ canvas.addEventListener('touchstart', e => {
   }
 }, { passive: false });
 
-canvas.addEventListener('touchmove', e => {
+canvas.addEventListener('touchmove', (e) => {
   if (!userImg) return;
   e.preventDefault();
 
@@ -144,21 +141,15 @@ canvas.addEventListener('touchmove', e => {
 
     lastX = e.touches[0].clientX;
     lastY = e.touches[0].clientY;
-
     draw();
   }
 
   if (e.touches.length === 2) {
     const newDistance = getDistance(e.touches[0], e.touches[1]);
-
-    zoom = Math.max(0.5, Math.min(3,
-      pinchStartZoom * (newDistance / pinchStartDistance)
-    ));
+    zoom = Math.max(0.5, Math.min(3, pinchStartZoom * (newDistance / pinchStartDistance)));
 
     document.getElementById('zoom').value = Math.round(zoom * 100);
-    document.getElementById('zoomVal').textContent =
-      Math.round(zoom * 100) + '%';
-
+    document.getElementById('zoomVal').textContent = `${Math.round(zoom * 100)}%`;
     draw();
   }
 }, { passive: false });
@@ -167,7 +158,6 @@ canvas.addEventListener('touchend', () => {
   isDragging = false;
 });
 
-// Download
 document.getElementById('downloadBtn').addEventListener('click', () => {
   const a = document.createElement('a');
   a.href = canvas.toDataURL('image/png');
