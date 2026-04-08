@@ -1,47 +1,72 @@
+/* 1. Global Reset & Variables */
+:root {
+  --red: #C8102E;
+  --light: #f5d0d7;
+  --bg-overlay: rgba(0, 0, 0, 0.6); /* Darkens the image for readability */
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* 2. Body with Background Image */
 body {
-  background-image: url('Fort Fest Custom DP Portrait 4.png');
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  padding: 40px 20px;
+  
+  /* Apply your background image here */
+  background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), 
+              url('your-festival-image.jpg');
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
   background-repeat: no-repeat;
-  font-family: 'DM Sans', sans-serif;
-  padding: 24px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-:root {
-  --red: #C8102E;
-  --light: #f5d0d7;
-}
-
+/* 3. Layout */
 main {
   max-width: 1100px;
+  width: 100%;
   margin: auto;
-  padding: 24px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
+  align-items: start;
 }
 
+@media(max-width: 768px){
+  main { grid-template-columns: 1fr; }
+}
 
-@media(max-width:768px){
-  main {
-    grid-template-columns: 1fr;
-  }
+/* 4. Components */
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 8px;
+  color: #1a1a1a;
 }
 
 .upload {
   border: 2px dashed var(--light);
-  padding: 30px;
+  padding: 40px 20px;
   border-radius: 16px;
   position: relative;
   text-align: center;
-  margin: 20px 0;
+  margin: 24px 0;
+  background: #fafafa;
 }
 
 .upload input {
@@ -52,9 +77,11 @@ main {
 }
 
 .preview-wrap {
+  background: #fff;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  line-height: 0; /* Removes bottom gap in canvas */
 }
 
 canvas {
@@ -64,22 +91,28 @@ canvas {
 }
 
 button {
-  padding: 14px 18px;
+  padding: 16px;
   border: none;
   border-radius: 14px;
   background: var(--red);
   color: #fff;
   font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
   width: 100%;
-  margin-top: 16px;
+  transition: opacity 0.2s;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 .controls {
-  display: none;
-  margin-top: 16px;
+  margin-bottom: 20px;
 }
 
 #zoom {
   width: 100%;
+  accent-color: var(--red);
 }
