@@ -21,14 +21,14 @@ let pinchStartZoom = 1;
 
 const circle = { x: 500, y: 395, r: 150 };
 
-template.onload = draw;
-draw();
+template.onload = () => {
+  draw();
+};
 
 function draw() {
-  // clear old drawing first
   ctx.clearRect(0, 0, OUT_W, OUT_H);
 
-  // draw uploaded image inside circle
+  // draw uploaded image first
   if (userImg) {
     ctx.save();
     ctx.beginPath();
@@ -59,10 +59,11 @@ function draw() {
     ctx.restore();
   }
 
-  // VERY IMPORTANT → draw frame on top
-  // ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
+  // draw frame ONLY after it has loaded
+  if (template.complete) {
+    ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
+  }
 }
-
 function getDistance(t1, t2) {
   const dx = t2.clientX - t1.clientX;
   const dy = t2.clientY - t1.clientY;
