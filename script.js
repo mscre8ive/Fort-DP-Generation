@@ -1,4 +1,4 @@
-const canvas = document.getElementById('canvas');
+const canvas = document.getElementById('canvas'); // Fixed capital 'C'
 const ctx = canvas.getContext('2d');
 
 const OUT_W = 1000;
@@ -21,60 +21,65 @@ let pinchStartZoom = 1;
 
 const circle = { x: 500, y: 395, r: 150 };
 
+// 1. Use a robust boolean flag instead of .complete
+let isTemplateLoaded = false;
+
 template.onload = () => {
+  isTemplateLoaded = true;
   draw();
 };
 
 function draw() {
   ctx.clearRect(0, 0, OUT_W, OUT_H);
 
+  // draw uploaded image first
   if (userImg) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
-    ctx.clip();
+    ctx.save(); // Save unclipped state
+    
+    // 2. Wrap the clipped drawing in a try...finally block
+    try {
+      ctx.beginPath();
+      ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
+      ctx.clip();
 
-    const diameter = circle.r * 2;
-    const scale = Math.max(
-      diameter / userImg.width,
-      diameter / userImg.height
-    ) * zoom;
+      const diameter = circle.r * 2;
+      const imgRatio = userImg.width / userImg.height;
 
-    const w = userImg.width * scale;
-    const h = userImg.height * scale;
+      let w = 0, h = 0;
+      
+      // 3. Prevent math errors from crashing the draw state
+      if (imgRatio > 0 && imgRatio !== Infinity) {
+        if (imgRatio > 1) {
+          h = diameter * zoom;
+          w = h * imgRatio;
+        } else {
+          w = diameter * zoom;
+          h = w / imgRatio;
+        }
 
-    ctx.drawImage(
-      userImg,
-      circle.x - w / 2 + offsetX,
-      circle.y - h / 2 + offsetY,
-      w,
-      h
-    );
-
-    ctx.restore();
+        ctx.drawImage(
+          userImg,
+          circle.x - w / 2 + offsetX,
+          circle.y - h / 2 + offsetY,
+          w,
+          h
+        );
+      }
+    } catch (err) {
+      console.error("Error drawing PFP:", err);
+    } finally {
+      // This is the magic fix. Even if the PFP math fails, 
+      // the clip is REMOVED so the frame can draw.
+      ctx.restore(); 
+    }
   }
 
-  if (template.complete) {
+  // draw frame safely using the flag
+  if (isTemplateLoaded) {
     ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
-
+  }
 }
 
-    ctx.drawImage(
-      userImg,
-      circle.x - w / 2 + offsetX,
-      circle.y - h / 2 + offsetY,
-      w,
-      h
-    );
-
-    ctx.restore();
-  }
-
-  // draw frame ONLY after it has loaded
-  if (template.complete) {
-    ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
-  }
-}
 function getDistance(t1, t2) {
   const dx = t2.clientX - t1.clientX;
   const dy = t2.clientY - t1.clientY;
