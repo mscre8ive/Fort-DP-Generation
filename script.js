@@ -1,13 +1,13 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-const OUT_W = 800;
-const OUT_H = 1050;
+const OUT_W = 1000;
+const OUT_H = 1250;
 canvas.width = OUT_W;
 canvas.height = OUT_H;
 
 const template = new Image();
-template.src = 'fort.jpeg';
+template.src = 'Fort Fest Custom DP Portrait 4.png';
 
 let userImg = null;
 let zoom = 1;
