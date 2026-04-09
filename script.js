@@ -19,7 +19,7 @@ let lastY = 0;
 let pinchStartDistance = 0;
 let pinchStartZoom = 1;
 
-const circle = { x: 500, y: 485, r: 150 };
+const circle = { x: 500, y: 395, r: 150 };
 
 template.onload = draw;
 draw();
