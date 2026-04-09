@@ -28,7 +28,6 @@ template.onload = () => {
 function draw() {
   ctx.clearRect(0, 0, OUT_W, OUT_H);
 
-  // draw uploaded image first
   if (userImg) {
     ctx.save();
     ctx.beginPath();
@@ -36,17 +35,29 @@ function draw() {
     ctx.clip();
 
     const diameter = circle.r * 2;
-    const imgRatio = userImg.width / userImg.height;
+    const scale = Math.max(
+      diameter / userImg.width,
+      diameter / userImg.height
+    ) * zoom;
 
-    let w, h;
+    const w = userImg.width * scale;
+    const h = userImg.height * scale;
 
-    if (imgRatio > 1) {
-      h = diameter * zoom;
-      w = h * imgRatio;
-    } else {
-      w = diameter * zoom;
-      h = w / imgRatio;
-    }
+    ctx.drawImage(
+      userImg,
+      circle.x - w / 2 + offsetX,
+      circle.y - h / 2 + offsetY,
+      w,
+      h
+    );
+
+    ctx.restore();
+  }
+
+  if (template.complete) {
+    ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
+
+}
 
     ctx.drawImage(
       userImg,
