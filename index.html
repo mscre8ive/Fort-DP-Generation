@@ -2,33 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fort Fest DP Generator</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fort Fest 2026 – DP Generator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app">
-    <div class="panel">
+  <main>
+    <section class="card">
       <h1>Fort Fest 2026 DP Generator</h1>
-      <p class="subtitle">Upload your photo and place it inside the circle.</p>
+      <p>Upload your photo, drag to position, pinch or slide to zoom, then download.</p>
 
       <div class="upload">
-        <input type="file" id="photoInput" accept="image/*">
-        <p>Upload your image</p>
+        <input type="file" id="photoInput" accept="image/*" />
+        <p>Click to upload your image</p>
       </div>
 
       <div class="controls" id="controls">
         <label>Zoom: <span id="zoomVal">100%</span></label>
-        <input type="range" id="zoom" min="50" max="300" value="100">
+        <input type="range" id="zoom" min="50" max="300" value="100" />
       </div>
 
       <button id="downloadBtn" disabled>Download DP</button>
-    </div>
+    </section>
 
-    <div class="stage">
-      <canvas id="canvas"></canvas>
-    </div>
-  </div>
+    <section>
+      <div class="preview-wrap">
+        <canvas id="canvas"></canvas>
+        <div class="guide-circle"></div>
+      </div>
+    </section>
+  </main>
 
   <script src="script.js"></script>
 </body>
