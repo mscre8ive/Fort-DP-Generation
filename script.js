@@ -25,35 +25,42 @@ template.onload = draw;
 draw();
 
 function draw() {
-if (userImg) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
-  ctx.clip();
+  // clear old drawing first
+  ctx.clearRect(0, 0, OUT_W, OUT_H);
 
-  const diameter = circle.r * 2;
-  const imgRatio = userImg.width / userImg.height;
+  // draw uploaded image inside circle
+  if (userImg) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
+    ctx.clip();
 
-  let w, h;
+    const diameter = circle.r * 2;
+    const imgRatio = userImg.width / userImg.height;
 
-  if (imgRatio > 1) {
-    h = diameter * zoom;
-    w = h * imgRatio;
-  } else {
-    w = diameter * zoom;
-    h = w / imgRatio;
+    let w, h;
+
+    if (imgRatio > 1) {
+      h = diameter * zoom;
+      w = h * imgRatio;
+    } else {
+      w = diameter * zoom;
+      h = w / imgRatio;
+    }
+
+    ctx.drawImage(
+      userImg,
+      circle.x - w / 2 + offsetX,
+      circle.y - h / 2 + offsetY,
+      w,
+      h
+    );
+
+    ctx.restore();
   }
 
-  ctx.drawImage(
-    userImg,
-    circle.x - w / 2 + offsetX,
-    circle.y - h / 2 + offsetY,
-    w,
-    h
-  );
-
-  ctx.restore();
-}
+  // VERY IMPORTANT → draw frame on top
+  ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
 }
 
 function getDistance(t1, t2) {
