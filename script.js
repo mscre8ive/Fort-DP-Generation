@@ -60,7 +60,7 @@ function draw() {
   }
 
   // VERY IMPORTANT → draw frame on top
-  ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
+  // ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
 }
 
 function getDistance(t1, t2) {
