@@ -1,8 +1,8 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-const OUT_W = 1000;
-const OUT_H = 1250;
+const OUT_W = 800;
+const OUT_H = 1050;
 canvas.width = OUT_W;
 canvas.height = OUT_H;
 
