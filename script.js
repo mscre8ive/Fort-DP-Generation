@@ -7,7 +7,7 @@ canvas.width = OUT_W;
 canvas.height = OUT_H;
 
 const template = new Image();
-template.src = 'fort.jpeg';
+template.src = 'Fort Fest Custom DP Portrait 4.png';
 
 let userImg = null;
 let zoom = 1;
