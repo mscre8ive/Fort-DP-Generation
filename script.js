@@ -25,35 +25,35 @@ template.onload = draw;
 draw();
 
 function draw() {
-  ctx.clearRect(0, 0, OUT_W, OUT_H);
+if (userImg) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
+  ctx.clip();
 
-  if (userImg) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
-    ctx.clip();
+  const diameter = circle.r * 2;
+  const imgRatio = userImg.width / userImg.height;
 
-    const size = circle.r * 2 * zoom;
-    const ratio = userImg.width / userImg.height;
+  let w, h;
 
-    let w = size;
-    let h = size;
-
-    if (ratio > 1) w = size * ratio;
-    else h = size / ratio;
-
-    ctx.drawImage(
-      userImg,
-      circle.x - w / 2 + offsetX,
-      circle.y - h / 2 + offsetY,
-      w,
-      h
-    );
-
-    ctx.restore();
+  if (imgRatio > 1) {
+    h = diameter * zoom;
+    w = h * imgRatio;
+  } else {
+    w = diameter * zoom;
+    h = w / imgRatio;
   }
 
-  ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
+  ctx.drawImage(
+    userImg,
+    circle.x - w / 2 + offsetX,
+    circle.y - h / 2 + offsetY,
+    w,
+    h
+  );
+
+  ctx.restore();
+}
 }
 
 function getDistance(t1, t2) {
