@@ -32,17 +32,12 @@ template.onload = () => {
 function draw() {
   ctx.clearRect(0, 0, OUT_W, OUT_H);
 
-  // 1. Draw the frame/background FIRST (Bottom Layer)
-  if (isTemplateLoaded) {
-    ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
-  }
-
-  // 2. Draw the uploaded image SECOND (Top Layer)
+  // draw uploaded image first
   if (userImg) {
-    ctx.save(); 
+    ctx.save(); // Save unclipped state
     
+    // 2. Wrap the clipped drawing in a try...finally block
     try {
-      // Create the circular mask
       ctx.beginPath();
       ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
       ctx.clip();
@@ -52,8 +47,8 @@ function draw() {
 
       let w = 0, h = 0;
       
+      // 3. Prevent math errors from crashing the draw state
       if (imgRatio > 0 && imgRatio !== Infinity) {
-        // Calculate dimensions to ensure the image covers the whole circle
         if (imgRatio > 1) {
           h = diameter * zoom;
           w = h * imgRatio;
@@ -61,24 +56,6 @@ function draw() {
           w = diameter * zoom;
           h = w / imgRatio;
         }
-
-        // Draw the image centered on the circle coordinates
-        ctx.drawImage(
-          userImg,
-          circle.x - w / 2 + offsetX,
-          circle.y - h / 2 + offsetY,
-          w,
-          h
-        );
-      }
-    } catch (err) {
-      console.error("Error drawing PFP:", err);
-    } finally {
-      // Remove the clipping mask so future draws aren't restricted
-      ctx.restore(); 
-    }
-  }
-}
 
         ctx.drawImage(
           userImg,
