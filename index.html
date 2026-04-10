@@ -1,42 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fort Fest 2026 – DP Generator</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fort Fest 2026 DP Generator</title>
 </head>
 <body>
-  <main>
-    <section class="card">
-      <h1>Fort Fest 2026 DP Generator</h1>
-      <p>Upload your photo, drag to position, pinch or slide to zoom, then download.</p>
+<div class="app">
+  <div class="controls">
+    <div>
+      <h1>Fort Fest 2026<br>DP Generator</h1>
+      <p class="subtitle">Upload your photo, drag to position, slide to zoom, then download.</p>
+    </div>
 
-      <div class="upload">
-        <input type="file" id="photoInput" accept="image/*" />
-        <p>Click to upload your image</p>
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+      <div class="upload-icon">
+        <svg width="20" height="20" fill="none" stroke="#c0392b" stroke-width="2.2" viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+        </svg>
       </div>
+      <div class="upload-label" id="uploadLabel">Click to upload your image</div>
+      <div class="upload-hint">JPG, PNG, WEBP</div>
+    </div>
 
-      <div class="controls" id="controls">
-        <label>Zoom: <span id="zoomVal">100%</span></label>
-        <input type="range" id="zoom" min="50" max="300" value="100" />
+    <div>
+      <div class="section-label">Zoom</div>
+      <div class="zoom-row">
+        <input type="range" id="zoomSlider" min="10" max="300" value="100" step="1">
+        <span class="zoom-val" id="zoomVal">100%</span>
       </div>
+    </div>
 
-      <button id="downloadBtn" disabled>Download DP</button>
-    </section>
+    <p class="tip" id="tipText">Upload a photo — it will appear inside the red circle. Drag to reposition.</p>
 
-    <section>
-      <div class="preview-wrap">
-        <canvas id="canvas"></canvas>
-    
-      </div>
-    </section>
-  </main>
+    <button class="download-btn" id="dlBtn" disabled>Download DP</button>
+  </div>
 
-  <script src="script.js"></script>
+  <div class="preview-panel">
+    <span class="preview-label">Preview</span>
+    <div class="canvas-wrapper">
+      <canvas id="outputCanvas"></canvas>
+    </div>
+  </div>
+</div>
 </body>
 </html>
