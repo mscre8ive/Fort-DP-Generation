@@ -1,174 +1,153 @@
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-const OUT_W = 1000;
-const OUT_H = 1250;
-canvas.width = OUT_W;
-canvas.height = OUT_H;
+const W = 1000;
+const H = 1250;
 
-const template = new Image();
-template.src = 'Fort Fest Custom DP Portrait 4.png';
+canvas.width = W;
+canvas.height = H;
 
-let userImg = null;
-let zoom = 1;
-let offsetX = 0;
-let offsetY = 0;
-let isDragging = false;
-let lastX = 0;
-let lastY = 0;
-let pinchStartDistance = 0;
-let pinchStartZoom = 1;
+// ===== FRAME IMAGE =====
+const frame = new Image();
+frame.src = "Fort Fest Custom DP Portrait 4.png";
 
-const circle = { x: 500, y: 395, r: 150 };
-
-template.onload = () => {
-  draw();
+// ===== CIRCLE POSITION =====
+const hole = {
+  x: 500,
+  y: 335,
+  r: 220
 };
 
-function draw() {
-  ctx.clearRect(0, 0, OUT_W, OUT_H);
+// ===== USER IMAGE STATE =====
+let photo = null;
+let zoom = 1;
+let dx = 0;
+let dy = 0;
+let dragging = false;
+let lastX = 0;
+let lastY = 0;
+
+// ===== RENDER =====
+function render() {
+  ctx.clearRect(0, 0, W, H);
 
   // draw uploaded image first
-  if (userImg) {
+  if (photo) {
     ctx.save();
     ctx.beginPath();
-    ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2);
+    ctx.arc(hole.x, hole.y, hole.r, 0, Math.PI * 2);
     ctx.clip();
 
-    const diameter = circle.r * 2;
-    const imgRatio = userImg.width / userImg.height;
+    const diameter = hole.r * 2;
+    const imgRatio = photo.width / photo.height;
 
-    let w, h;
+    let drawW;
+    let drawH;
 
     if (imgRatio > 1) {
-      h = diameter * zoom;
-      w = h * imgRatio;
+      drawH = diameter * zoom;
+      drawW = drawH * imgRatio;
     } else {
-      w = diameter * zoom;
-      h = w / imgRatio;
+      drawW = diameter * zoom;
+      drawH = drawW / imgRatio;
     }
 
     ctx.drawImage(
-      userImg,
-      circle.x - w / 2 + offsetX,
-      circle.y - h / 2 + offsetY,
-      w,
-      h
+      photo,
+      hole.x - drawW / 2 + dx,
+      hole.y - drawH / 2 + dy,
+      drawW,
+      drawH
     );
 
     ctx.restore();
   }
 
-  // draw frame ONLY after it has loaded
-  if (template.complete) {
-    ctx.drawImage(template, 0, 0, OUT_W, OUT_H);
+  // draw frame
+  if (frame.complete) {
+    ctx.drawImage(frame, 0, 0, W, H);
   }
 }
-function getDistance(t1, t2) {
-  const dx = t2.clientX - t1.clientX;
-  const dy = t2.clientY - t1.clientY;
-  return Math.sqrt(dx * dx + dy * dy);
-}
 
-document.getElementById('photoInput').addEventListener('change', (e) => {
+// ===== LOAD FRAME =====
+frame.onload = () => {
+  render();
+};
+
+// ===== IMAGE UPLOAD =====
+const input = document.getElementById("photoInput");
+const controls = document.getElementById("controls");
+const downloadBtn = document.getElementById("downloadBtn");
+const zoomSlider = document.getElementById("zoom");
+const zoomVal = document.getElementById("zoomVal");
+
+input.addEventListener("change", function (e) {
   const file = e.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = (ev) => {
-    const img = new Image();
-    img.onload = () => {
-      userImg = img;
-      zoom = 1;
-      offsetX = 0;
-      offsetY = 0;
 
-      document.getElementById('controls').style.display = 'block';
-      document.getElementById('downloadBtn').disabled = false;
-      draw();
+  reader.onload = function (event) {
+    const img = new Image();
+
+    img.onload = function () {
+      photo = img;
+      zoom = 1;
+      dx = 0;
+      dy = 0;
+
+      controls.style.display = "block";
+      downloadBtn.disabled = false;
+      zoomSlider.value = 100;
+      zoomVal.textContent = "100%";
+
+      render();
     };
-    img.src = ev.target.result;
+
+    img.src = event.target.result;
   };
+
   reader.readAsDataURL(file);
 });
 
-document.getElementById('zoom').addEventListener('input', (e) => {
-  zoom = e.target.value / 100;
-  document.getElementById('zoomVal').textContent = `${e.target.value}%`;
-  draw();
+// ===== ZOOM SLIDER =====
+zoomSlider.addEventListener("input", function () {
+  zoom = this.value / 100;
+  zoomVal.textContent = `${this.value}%`;
+  render();
 });
 
-canvas.addEventListener('mousedown', (e) => {
-  isDragging = true;
+// ===== DRAG =====
+canvas.addEventListener("mousedown", (e) => {
+  if (!photo) return;
+  dragging = true;
   lastX = e.offsetX;
   lastY = e.offsetY;
 });
 
-window.addEventListener('mouseup', () => {
-  isDragging = false;
+window.addEventListener("mouseup", () => {
+  dragging = false;
 });
 
-canvas.addEventListener('mousemove', (e) => {
-  if (!isDragging || !userImg) return;
+canvas.addEventListener("mousemove", (e) => {
+  if (!dragging || !photo) return;
 
-  const scaleX = OUT_W / canvas.clientWidth;
-  const scaleY = OUT_H / canvas.clientHeight;
+  const scaleX = W / canvas.clientWidth;
+  const scaleY = H / canvas.clientHeight;
 
-  offsetX += (e.offsetX - lastX) * scaleX;
-  offsetY += (e.offsetY - lastY) * scaleY;
+  dx += (e.offsetX - lastX) * scaleX;
+  dy += (e.offsetY - lastY) * scaleY;
 
   lastX = e.offsetX;
   lastY = e.offsetY;
 
-  draw();
+  render();
 });
 
-canvas.addEventListener('touchstart', (e) => {
-  if (!userImg) return;
-
-  if (e.touches.length === 1) {
-    isDragging = true;
-    lastX = e.touches[0].clientX;
-    lastY = e.touches[0].clientY;
-  } else if (e.touches.length === 2) {
-    pinchStartDistance = getDistance(e.touches[0], e.touches[1]);
-    pinchStartZoom = zoom;
-  }
-}, { passive: false });
-
-canvas.addEventListener('touchmove', (e) => {
-  if (!userImg) return;
-  e.preventDefault();
-
-  if (e.touches.length === 1 && isDragging) {
-    const scaleX = OUT_W / canvas.clientWidth;
-    const scaleY = OUT_H / canvas.clientHeight;
-
-    offsetX += (e.touches[0].clientX - lastX) * scaleX;
-    offsetY += (e.touches[0].clientY - lastY) * scaleY;
-
-    lastX = e.touches[0].clientX;
-    lastY = e.touches[0].clientY;
-    draw();
-  }
-
-  if (e.touches.length === 2) {
-    const newDistance = getDistance(e.touches[0], e.touches[1]);
-    zoom = Math.max(0.5, Math.min(3, pinchStartZoom * (newDistance / pinchStartDistance)));
-
-    document.getElementById('zoom').value = Math.round(zoom * 100);
-    document.getElementById('zoomVal').textContent = `${Math.round(zoom * 100)}%`;
-    draw();
-  }
-}, { passive: false });
-
-canvas.addEventListener('touchend', () => {
-  isDragging = false;
-});
-
-document.getElementById('downloadBtn').addEventListener('click', () => {
-  const a = document.createElement('a');
-  a.href = canvas.toDataURL('image/png');
-  a.download = 'FortFest2026_DP.png';
-  a.click();
+// ===== DOWNLOAD =====
+downloadBtn.addEventListener("click", () => {
+  const link = document.createElement("a");
+  link.download = "FortFest_DP.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
 });
