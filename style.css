@@ -47,7 +47,7 @@ main {
 }
 
 .upload input {
-  position: absolute;
+
   inset: 0;
   opacity: 0;
   cursor: pointer;
