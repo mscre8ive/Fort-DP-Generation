@@ -35,7 +35,6 @@ function draw() {
 
     const size = circle.r * 2 * zoom;
     const ratio = userImg.width / userImg.height;
-
     let w = size;
     let h = size;
 
@@ -74,7 +73,6 @@ document.getElementById('photoInput').addEventListener('change', (e) => {
       zoom = 1;
       offsetX = 0;
       offsetY = 0;
-
       document.getElementById('controls').style.display = 'block';
       document.getElementById('downloadBtn').disabled = false;
       draw();
@@ -111,7 +109,6 @@ canvas.addEventListener('mousemove', (e) => {
 
   lastX = e.offsetX;
   lastY = e.offsetY;
-
   draw();
 });
 
